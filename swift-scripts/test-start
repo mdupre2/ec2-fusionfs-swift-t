@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# opt 0 : test regular read speeds with swift-t and fusionfs without location optimization
+# opt 1 : test  read speeds with swift-t and fusionfs with location optimization
+# opt 2 : test local reads with swift-t without fusionfs
+
+# if not enough arguments print usage
+if [ "$#" -lt 2 ]; then
+echo "Usage:  $(basename $0) <n-proc> <op-num> "
+echo "  example: $(basename $0) 4 0 "
+echo "opt 0 : test regular read speeds with swift-t and fusionfs without location optimization"
+echo "opt 1 : test  read speeds with swift-t and fusionfs with location optimization"
+echo "opt 2 : test only local writes with swift-t without fusionfs. No read test."
+exit
+fi
+echo starting...
+
+export TIMEFORMAT=%R
+
+NFILES=64
+FILESIZE=1024
+
+# directory where results are downloaded
+DIRNAME="./results/nods${1}-opt${2}-nfiles${NFILES}-filesize${FILESIZE}"
+# remove if it already exists
+rm -rf $DIRNAME
+
+# perform test
+if [ "$2" -eq 0 ]; then
+echo opt: 0
+source ./ec2-turbine testw0.tic -n $1
+WTIME=$TURBINE_TIME
+RTIME=" - "
+source ./ec2-turbine testr0.tic -n $1
+RTIME=$TURBINE_TIME
+fi
+
+if [ "$2" -eq 1 ]; then
+echo opt 1
+source ./ec2-turbine testw1.tic -n $1
+WTIME=$TURBINE_TIME
+RTIME=" - "
+source ./ec2-turbine testr1.tic -n $1
+RTIME=$TURBINE_TIME
+fi
+
+if [ "$2" -eq 2 ]; then
+echo opt 2
+source ./ec2-turbine testw2.tic -n $1
+WTIME=$TURBINE_TIME
+RTIME=" - "
+fi
+
+
+# retreive results
+ mkdir $DIRNAME
+./ec2-pull "/mnt/work/*" $DIRNAME
+
+# process results
+./test-process $DIRNAME write
+echo
+
+if [ "$2" -ne 2 ]; then
+   ./test-process $DIRNAME read
+   echo
+fi
+
+export AVGW=$(./test-average $DIRNAME/write-mbs-normalized)
+WRECORDS=$(cat $DIRNAME/write-mbs-normalized | wc -l | sed -e 's/^[ \t]*//')
+export AVGR=" - "
+
+if [ "$2" -ne 2 ]; then
+export AVGR=$(./test-average $DIRNAME/read-mbs-normalized)
+RRECORDS=$(cat $DIRNAME/read-mbs-normalized | wc -l | sed -e 's/^[ \t]*//')
+fi
+
+
+export NWORKERS=$(echo "$1 - 1" | bc )
+export WPERNODE=$( echo "scale=0; (($NFILES * $FILESIZE) / $WTIME ) / $NWORKERS" | bc -l )
+export WTHROUGHPUT=$( echo "scale=0; (($NFILES * $FILESIZE) / $WTIME ) " | bc -l )
+if [ "$2" -ne 2 ]; then
+    export RPERNODE=$( echo "scale=0; (($NFILES * $FILESIZE) / $RTIME ) / ( $1 - 1)" | bc -l )
+    export RTHROUGHPUT=$( echo "scale=0; (($NFILES * $FILESIZE) / $RTIME ) " | bc -l )
+fi
+
+
+# print results
+echo
+echo "********************************************"
+echo
+echo "** Opt-num: $2"
+echo "** number of files: $NFILES files"
+echo "** files size: $FILESIZE MB"
+echo
+echo "** write avarage: $AVGW MB/s"
+echo "** write time: $WTIME s"
+echo "** write records: $WRECORDS records"
+echo "** write throughput per node: $WPERNODE"
+echo
+
+if [ "$2" -ne 2 ]; then
+
+echo "** read average: $AVGR MB/s"
+echo "** read time: $RTIME s"
+echo "** read records: $RRECORDS records"
+echo "** read throughput per node: $RPERNODE"
+echo
+fi
+echo "********************************************"
+
+
+# clean up
+./test-reset 2> /dev/null
+
+

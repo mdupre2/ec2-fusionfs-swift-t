@@ -1,0 +1,27 @@
+#!/bin/bash
+# copies file from all instances to CopyDirectory 
+
+source ec2-config
+
+# if not enough arguments print usage
+if [ "$#" -lt 2 ]; then
+    echo "Usage:  $(basename $0) insance_source_file local_target_directory"
+    echo "  example: $(basename $0) /file/on/instance /directory/on/local/machine"
+    exit
+fi
+
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+	mkdir ${2}/$i
+done
+
+for i in "${iparr[@]}"
+do
+	scp -i ${SWIFT_EC2_KEY} $SWIFT_EC2_USER@${i}:$1 $2/${i} &# copy file
+done
+
+wait

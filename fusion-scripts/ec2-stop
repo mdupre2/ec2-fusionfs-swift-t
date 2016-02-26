@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Unmounts FusionFS
+
+source ec2-config
+
+# if  arguments are given  print usage
+if [ "$#" -gt 0 ]; then
+echo "Usage:  $(basename $0) "
+exit
+fi
+echo "Stopping FusionFS"
+pssh -P -h public_ip.txt -l "ubuntu"   "source ~/.profile; cd $(dirname $FUSIONFS_EC2_STOP); $FUSIONFS_EC2_STOP"
+exit
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for j in "${iparr[@]}"
+do
+    echo "stopping fusionfs on node $j"
+    ssh -i ${FUSIONFS_EC2_KEY} $FUSIONFS_EC2_USER@${j} "source ~/.profile; cd $(dirname $FUSIONFS_EC2_STOP); $FUSIONFS_EC2_STOP"  & #stop fusionfs
+    echo
+done
+
+wait

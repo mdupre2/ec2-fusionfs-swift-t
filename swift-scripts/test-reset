@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# reset test on all ec2 instances by removing all the files that have been written as part of the test
+
+source ec2-config
+
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+	ssh -q -i ${SWIFT_EC2_KEY}  $SWIFT_EC2_USER@${i} 'source ~/.profile; rm /mnt/write/*; rm /mnt/work/*; rm /mnt/script/fusion_root/*' &
+done
+
+wait
+

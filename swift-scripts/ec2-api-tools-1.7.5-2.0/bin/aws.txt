@@ -1,0 +1,9 @@
+RESERVATION	r-d1e50dde	845273017314	(nil)
+INSTANCE	i-2edc32e7	ami-5189a661	ec2-54-69-154-169.us-west-2.compute.amazonaws.com	ip-172-31-40-64.us-west-2.compute.internal	running	BigData_AWS_key	0	(nil)	t2.small	2015-07-22T16:23:04+0000	us-west-2b	(nil)	(nil)	(nil)	monitoring-disabled	54.69.154.169	172.31.40.64	vpc-be2db0db	subnet-82d05af5	ebs	(nil)	(nil)	(nil)	hvm	xen	cehCL1436146143357	sg-ea847e8e	default	false	(nil)
+BLOCKDEVICE	/dev/sda1	vol-535f4041	2015-07-06T01:29:07.000Z	true	(nil)	(nil)
+NIC	eni-d8ff4b91	subnet-82d05af5	vpc-be2db0db	845273017314	in-use	172.31.40.64	ip-172-31-40-64.us-west-2.compute.internal	true
+NICATTACHMENT	eni-attach-36593217	0	attached	2015-07-05T20:29:03-0600	true
+NICASSOCIATION	54.69.154.169	amazon	172.31.40.64
+GROUP	sg-ea847e8e	launch-wizard-1
+PRIVATEIPADDRESS	172.31.40.64	ip-172-31-40-64.us-west-2.compute.internal	ec2-54-69-154-169.us-west-2.compute.amazonaws.com
+TAG	instance	i-2edc32e7	Name	head_node

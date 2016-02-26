@@ -1,0 +1,46 @@
+# The region where the instances run. For example: us-west-2
+export FUSIONFS_EC2_REGION=us-west-2
+
+# The path to the .pem file on local machine, that is used for all instances
+export FUSIONFS_EC2_KEY=
+
+# The name of the key. For example if the key is my_key.pem then this should be set to my_key
+export FUSION_EC2_KEY_NAME=
+
+# The user of the ec2 instances. Change if not using ubuntu.
+export FUSIONFS_EC2_USER=ubuntu
+
+#The path of the fusion mount directory on the ec2 instances. It is not used by these scripts at this time and does not need to be filled out.
+#export FUSIONFS_EC2_MOUNT=
+
+#The path of the fusion root directory on the ec2 instances. It is not used by these scripts at this time and does not need to be filled out.
+#export FUSIONFS_EC2_ROOT=
+
+#The path of the neighbor.conf file on the ec2 instances
+export FUSIONFS_EC2_START_NEIGHBORS=
+
+#The path of the start_service.sh script on the ec2 instances
+export FUSIONFS_EC2_START_SERVICE=
+
+#The path of the start.sh script on the ec2 instances
+export FUSIONFS_EC2_START=
+
+#The path of the stop_service.sh script on the ec2 instances
+export FUSIONFS_EC2_STOP_SERVICE=
+
+#The path of the stop.sh script on the ec2 instances
+export FUSIONFS_EC2_STOP=
+
+# The AWS Access Key ID
+export AWS_ACCESS_KEY=
+
+# The AWS Secret Access Key
+export AWS_SECRET_KEY=
+
+# The ec2 api home. This can be left alone.
+export EC2_HOME=$(pwd)/ec2-api-tools-1.7.5-2.0
+
+# The java home. If on a mac, leave it as it is 
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+

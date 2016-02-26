@@ -1,0 +1,22 @@
+#!/bin/bash
+# copies file to all instances
+
+source ec2-config
+
+# if not enough arguments print usage
+if [ "$#" -lt 2 ]; then
+    echo "Usage:  $(basename $0) local_sorce_file insance_target_file "
+    echo "  example: $(basename $0) hello.txt /path/on/instance"
+    exit
+fi
+
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+	scp -i ${FUSIONFS_EC2_KEY} $1 $FUSIONFS_EC2_USER@${i}:$2 &# copy file
+done
+
+wait

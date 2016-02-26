@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# currently tests 32, 16, 8, 4 nodes
+# uncomment all scripts to also test 64 nodes
+# head node ip must be at the first ip in all private_ip.txt, public_ip.txt files
+
+#64
+#echo -e "\n\n***testing 64***\n\n"
+#./test-all 65
+
+#32
+#sed -e :a -e '$d;N;2,32ba' -e 'P;D' private_ip.txt > tmp
+#mv tmp private_ip.txt
+#sed -e :a -e '$d;N;2,32ba' -e 'P;D' public_ip.txt > tmp
+#mv tmp public_ip.txt
+#cd ../ec2-fusionfs
+#sed -e :a -e '$d;N;2,32ba' -e 'P;D' private_ip.txt > tmp
+#mv tmp private_ip.txt
+#sed -e :a -e '$d;N;2,32ba' -e 'P;D' public_ip.txt > tmp
+#mv tmp public_ip.txt
+#cd ../ec2-swift-t
+
+echo -e "\n\n***testing 32***\n\n"
+./test-all 33
+
+#16
+sed -e :a -e '$d;N;2,16ba' -e 'P;D' private_ip.txt > tmp
+mv tmp private_ip.txt
+sed -e :a -e '$d;N;2,16ba' -e 'P;D' public_ip.txt > tmp
+mv tmp public_ip.txt
+cd ../ec2-fusionfs
+sed -e :a -e '$d;N;2,16ba' -e 'P;D' private_ip.txt > tmp
+mv tmp private_ip.txt
+sed -e :a -e '$d;N;2,16ba' -e 'P;D' public_ip.txt > tmp
+mv tmp public_ip.txt
+cd ../ec2-swift-t
+
+echo -e "\n\n***testing 16***\n\n"
+./test-all 17
+
+#8
+sed -e :a -e '$d;N;2,8ba' -e 'P;D' private_ip.txt > tmp
+mv tmp private_ip.txt
+sed -e :a -e '$d;N;2,8ba' -e 'P;D' public_ip.txt > tmp
+mv tmp public_ip.txt
+cd ../ec2-fusionfs
+sed -e :a -e '$d;N;2,8ba' -e 'P;D' private_ip.txt > tmp
+mv tmp private_ip.txt
+sed -e :a -e '$d;N;2,8ba' -e 'P;D' public_ip.txt > tmp
+mv tmp public_ip.txt
+cd ../ec2-swift-t
+
+echo -e "\n\n***testing 8***\n\n"
+./test-all 9
+
+#4
+sed -e :a -e '$d;N;2,4ba' -e 'P;D' private_ip.txt > tmp
+mv tmp private_ip.txt
+sed -e :a -e '$d;N;2,4ba' -e 'P;D' public_ip.txt > tmp
+mv tmp public_ip.txt
+cd ../ec2-fusionfs
+sed -e :a -e '$d;N;2,4ba' -e 'P;D' private_ip.txt > tmp
+mv tmp private_ip.txt
+sed -e :a -e '$d;N;2,4ba' -e 'P;D' public_ip.txt > tmp
+mv tmp public_ip.txt
+cd ../ec2-swift-t
+
+echo -e "\n\n***testing 4***\n\n"
+./test-all 5
+
+

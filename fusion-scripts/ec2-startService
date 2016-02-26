@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Start zhtserver and ffsnet on all ec2 instances
+# any environment variables in .bashrc will not be set. Set any environment variables needed in ~/.bash_profile
+
+# If it seems like it is stuck keep pressing ctr-c until it quits and try again running it again. Sometimes it takes a couple of times to get it to work.
+
+source ec2-config
+
+# if arguments are give print usage 
+if [ "$#" -gt 0 ]; then
+echo "Usage:  $(basename $0) "
+exit
+fi
+
+
+#cat private_ip.txt | awk '{print $1 " 50000"}' > tmpneighbor.conf
+
+#rm tmpneighbor.conf 2>&1 1>/dev/null
+
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+# stor private ips in an array
+neighborArr=($(cat private_ip.txt | awk '{ print $1 }'))
+
+rm tmpneighbor.conf 2>/dev/null
+
+# create the neigbor file with ports
+for i in "${neighborArr[@]}"
+do
+    echo "$i 50000" >> tmpneighbor.conf
+done
+
+
+for j in "${iparr[@]}"
+do
+    echo "setting neighbor.conf on node $j"
+    scp -i ${FUSIONFS_EC2_KEY} tmpneighbor.conf $FUSIONFS_EC2_USER@${j}:$FUSIONFS_EC2_START_NEIGHBORS & #copy neighbor.conf
+# echo "starting services on node $j"
+#ssh -i ${FUSIONFS_EC2_KEY} $FUSIONFS_EC2_USER@${j} "source ~/.profile; cd $(dirname $FUSIONFS_EC2_START_SERVICE); $FUSIONFS_EC2_START_SERVICE >> /dev/null" &  #start services
+    echo 
+done
+wait
+echo "Starting Services"
+pssh -P -h public_ip.txt -l "ubuntu"  "source ~/.profile; cd $(dirname $FUSIONFS_EC2_START_SERVICE); $FUSIONFS_EC2_START_SERVICE >> /dev/null"
+
+
+rm tmpneighbor.conf 2>&1 1>/dev/null
+
+#wait

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# calculate the average of a list of numbers in file passed as argument
+
+count=0;
+total=0; 
+
+for i in $( awk '{ print $1; }' $1 )
+   do 
+        total=$(echo $total+$i | bc )
+	((count++))
+   done
+echo "scale=2; $total / $count" | bc

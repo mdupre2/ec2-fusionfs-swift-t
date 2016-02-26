@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Mount FusionFS
+
+source ec2-config
+
+# if arguments are give  print usage
+if [ "$#" -gt 0 ]; then
+echo "Usage:  $(basename $0) "
+exit
+fi
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for j in "${iparr[@]}"
+do
+    echo "cleanAll on node $j"
+        ssh -i ${FUSIONFS_EC2_KEY} $FUSIONFS_EC2_USER@${j} "source ~/.profile; cd $(dirname $FUSIONFS_EC2_START); /home/ubuntu/fusion/script/compileAll.sh"   #start fusionfs
+	    
+	    
+done
+
+

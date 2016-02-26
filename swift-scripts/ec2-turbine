@@ -1,0 +1,37 @@
+#!/bin/bash
+# make sure that head_node_public_ip.txt contains the public ip of the head node on the first line
+
+source ec2-config
+export TIMEFORMAT=%R
+
+# if not enough arguments print usage
+if [ "$#" -lt 1 ]; then
+    echo "Usage:  $(basename $0) program.tic [COMMANDS] "
+    echo "  example: $(basename $0) hello.tic -n 3"
+    exit
+fi
+
+# create a string of all the command line arguments that will used with turbine
+argString=""
+argArray=("$@")
+for ((x=1; x<="$#"; x++))
+{
+    argString="$argString ${argArray[$x]}"
+}
+
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+      scp -i ${SWIFT_EC2_KEY} $1 $SWIFT_EC2_USER@${i}:/mnt/swift-run & # copy .tic file
+done
+
+wait
+
+# start program
+
+scp -i ${SWIFT_EC2_KEY} private_ip.txt $SWIFT_EC2_USER@$(sed -n "1,1p" head_node_public_ip.txt | cat):/mnt/swift-run  #copy private_ip.txt
+export TURBINE_TIME=$( { time ssh -q -i ${SWIFT_EC2_KEY}  $SWIFT_EC2_USER@$(sed -n "1,1p" head_node_public_ip.txt | cat) 'source ~/.profile;' 'export TURBINE_LOG=0;' $SWIFT_EC2_TURBINE_PATH '-f /mnt/swift-run/private_ip.txt' $argString '/mnt/swift-run/'$(basename $1) > output; } 2>&1 )
+

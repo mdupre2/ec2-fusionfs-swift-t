@@ -1,0 +1,28 @@
+#!/bin/bash
+
+
+# Stop zhtserver and ffsnet on all ec2 instances
+# any environment variables in .bashrc will not be set. Set any environment variables needed in ~/.profile
+
+source ec2-config
+
+# if arguments are given print usage
+if [ "$#" -gt 0 ]; then
+echo "Usage:  $(basename $0) "
+exit
+fi
+echo "Stopping services"
+pssh -P -h public_ip.txt -l "ubuntu"   "source ~/.profile; cd $(dirname $FUSIONFS_EC2_STOP_SERVICE); $FUSIONFS_EC2_STOP_SERVICE"
+exit
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for j in "${iparr[@]}"
+do
+    echo "stopping services on node $j"
+    ssh -i ${FUSIONFS_EC2_KEY} $FUSIONFS_EC2_USER@${j} "source ~/.profile; cd $(dirname $FUSIONFS_EC2_STOP_SERVICE); $FUSIONFS_EC2_STOP_SERVICE" &  #stop services
+    echo
+done
+
+wait

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+source ec2-config
+
+# if the script doesn't work try the script below as an alternative
+
+# retrieves the list of public ip addresses of all running ec2 instances and stores them in public_ip.txt
+#$EC2_HOME/bin/ec2-describe-instances  --region $FUSIONFS_EC2_REGION --show-empty-fields --filter "instance-state-name=running" --filter "key-name=$FUSION_EC2_KEY_NAME" | grep NICASSOCIATION | awk '{ print $2 }' > public_ip.txt
+
+
+# retrieves the list of private ip addresses of all running ec2 instances and stores them in private_ip.txt
+#$EC2_HOME/bin/ec2-describe-instances --region $FUSIONFS_EC2_REGION --show-empty-fields --filter "instance-state-name=running" --filter "key-name=$FUSION_EC2_KEY_NAME" | grep NICASSOCIATION | awk '{ print $4 }' > private_ip.txt
+
+
+# retrieves the list of public ip addresses of all running ec2 instances and stores them in public_ip.txt
+$EC2_HOME/bin/ec2-describe-instances  --region $FUSIONFS_EC2_REGION --show-empty-fields --filter "instance-state-name=running" --filter "key-name=$FUSION_EC2_KEY_NAME" | grep INSTANCE | awk '{ print $17 }' > public_ip.txt
+
+
+# retrieves the list of private ip addresses of all running ec2 instances and stores them in private_ip.txt
+$EC2_HOME/bin/ec2-describe-instances --region $FUSIONFS_EC2_REGION --show-empty-fields --filter "instance-state-name=running" --filter "key-name=$FUSION_EC2_KEY_NAME" | grep INSTANCE | awk '{ print $18 }' > private_ip.txt

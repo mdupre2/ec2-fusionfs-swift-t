@@ -1,0 +1,47 @@
+#!/bin/bash
+
+./test-init
+
+source ./test-start $1 0
+avgw0=$AVGW
+avgr0=$AVGR
+wpernode0=$WPERNODE
+rpernode0=$RPERNODE
+wthroughput0=$WTHROUGHPUT
+rthroughput0=$RTHROUGHPUT
+
+./test-stop
+
+./test-init
+
+source ./test-start $1 1
+avgw1=$AVGW
+avgr1=$AVGR
+wpernode1=$WPERNODE
+rpernode1=$RPERNODE
+wthroughput1=$WTHROUGHPUT
+rthroughput1=$RTHROUGHPUT
+
+./test-stop
+
+source ./test-start $1 2
+avgw2=$AVGW
+wpernode2=$WPERNODE
+wthroughput2=$WTHROUGHPUT
+
+
+
+echo
+echo "${NWORKERS}, ${wpernode1}, ${wpernode2}" >> data/data-write.csv
+echo "${NWORKERS}, ${rpernode0}, ${rpernode1}" >> data/data-read.csv
+echo "${NWORKERS}, ${wthroughput1}, ${wthroughput2}" >> data/data-write-throughput.csv
+echo "${NWORKERS}, ${rthroughput0}, ${rthroughput1}" >> data/data-read-throughput.csv
+echo "${NWORKERS}, ${avgw1}, ${avgw2}" >> data/data-write-mbs.csv
+echo "${NWORKERS}, ${avgr0}, ${avgr1}" >> data/data-read-mbs.csv
+
+# inform that data was added to csv files
+echo ""
+echo "Results added to:  data/data-write.csv, data/data-read.csv, data/data-write-throughput.csv, data/data-read-throughput.csv, data/data-write-mbs.csv and data/data-read-mbs.csv"
+echo ""
+echo ""
+

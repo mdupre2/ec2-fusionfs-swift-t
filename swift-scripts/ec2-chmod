@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source ec2-config
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+	ssh -q -i ${SWIFT_EC2_KEY}  $SWIFT_EC2_USER@$i  "sudo chmod +x $1 "
+done
+
+
+

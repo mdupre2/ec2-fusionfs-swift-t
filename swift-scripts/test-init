@@ -1,0 +1,5 @@
+./ec2-ip
+cd ../ec2-fusionfs
+./ec2-ip
+./ec2-startService
+./ec2-start

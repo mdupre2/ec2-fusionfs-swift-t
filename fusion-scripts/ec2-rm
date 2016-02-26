@@ -1,0 +1,25 @@
+#!/bin/bash
+# removes file on all ec2 instances
+
+source ec2-config
+
+# if not enough arguments print usage
+if [ "$#" -lt 1 ]; then
+    echo "Usage:  $(basename $0) instance_file"
+    echo "  example: $(basename $0) /file/to/delete "
+    exit
+fi
+
+echo "removing $1"
+pssh -P -h public_ip.txt -l "ubuntu"   "source ~/.profile; rm $1"
+exit
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+	ssh -i ${FUSIONFS_EC2_KEY}  $FUSIONFS_EC2_USER@${i} "source ~/.profile; rm $1" &
+done
+
+wait
