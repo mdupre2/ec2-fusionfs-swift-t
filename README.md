@@ -11,6 +11,7 @@
 * Start ec2 instances and then run ec2-ip from you computer. Then check that pubic_ip.txt and private_ip.txt is populated with the ip addresses of you running instances. **If it is not working then none of the scripts will work**. Do this in both fusion-scripts and swift scripts directory.
 
 ##Swift Installation Scripts
+
 \*\* *Assumes that ec2-config file in swift-scripts is already filled.*
 
 1. Start 2 (or more if you want to install on multiple worker nodes) ec2 instances one that will be the head the others fill be the workers
@@ -20,6 +21,7 @@
 5. run `ec2-swift-install`
 
 ##FusionFS Installation Scripts
+
 \*\* *Assumes that ec2-config in fusion-scripts is already filled.*
 \*\* *It also uploads lookup.cpp on each node and compiles it.*
 
@@ -28,6 +30,7 @@
 3. Run `ec2-fusion-install`
 
 ##Test Scripts assume the following exists on each node:
+
 \*\* *I think these are taken care of for you if you install Swift and Fusion with the scripts provided and run test-mnt before running test*
 
 * a directory /mnt/swift-run
@@ -43,6 +46,7 @@
 ##Test Scripts
 
 ###Work Flow for Cluster of Size n
+
 \*\* *Assumes that ect-config files in swift-scripts and fusion-scripts are already filled*
 
 1. Start nodes on ec2 one head node and n worker Nodes. Instances must have an ssd mounted at /mnt
@@ -54,11 +58,13 @@
 
 
 ###Work Flow for Multiple Cluster Size Tests (32, 16, 8, 4)
+
 \*\* *I need to work on the `test-allSizes`  script before I fill this section*
 
 ###Script Descriptions
 
 ####test-allSizes
+
 Usage : `test-allSizes`
 Runs test-all with each cluster size: 33, 17, 9, 5 . (these numbers include the head node)
 Make sure head node ip must be at the first ip in private_ip.txt, public_ip.txt files in both swift-scripts and fusion-scripts.
@@ -66,12 +72,14 @@ Make sure head node ip must be at the first ip in private_ip.txt, public_ip.txt 
 
  
 ####test-all
+
 Usage : `test-start <n-proc>`
 runs test-start 3 times with each opt number:  0,1,2
 adds row to csv files in data directory with results.
 
 
 ####test-start
+
 Usage : `test-start <n-proc> <opt-num>`
 Performs read/write test with 64 files of 1024 bytes using n-proc processes
 
@@ -88,6 +96,7 @@ Performs read/write test with 64 files of 1024 bytes using n-proc processes
 Prints results to stdout. If using the script by itself call test-init first.
 
 ####swift-code & lookup
+
 swift-code directory contains the swift code that performs the write test (testw.swift) and read test (testr.swift). These are already compiled and stored in swift-scripts:
 
 * testr0.tic: testr.swift compiled with opt 0
