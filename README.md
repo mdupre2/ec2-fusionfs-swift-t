@@ -8,7 +8,7 @@
 4. Use the downloaded credentials to fill in `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` in `ec2-config` in both swift-scripts and fusion-scripts directory
 
 ##Sanity Checks
-* Start ec2 instances and then run ec2-ip from you computer. Then check that pubic_ip.txt and private_ip.txt is populated with the ip addresses of you running instances. **If it is not working then none of the scripts will work**. Do this in both fusion-scripts and swift scripts directory.
+* Start ec2 instances and then run ec2-ip from you computer. Then check that pubic_ip.txt and private_ip.txt is populated with the ip addresses of your running instances. **If it is not working then none of the scripts will work**. Do this in both fusion-scripts and swift scripts directory.
 
 ##Swift Installation Scripts
 
