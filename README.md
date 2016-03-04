@@ -1,6 +1,7 @@
 #ec2-fusionfs-swift-t
 
 ##Setup
+
 1. Create ec2 instances. All insances must have FusionFS installed in the same location. Having all the instances look the same is helpful. Also its important to note **Swift-T does not work with t2.micro instances on ec2**  
 2. Fill in `ec2-config` file. Note that any environment variables exported in ~/.bashrc of the ec2 instance will not be exported. Export all environment variables in ~/.profile. 
 3. If you don't have a AWS user with **administative permissions**, [create a user](http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html). 
@@ -10,7 +11,8 @@
 * Start ec2 instances and then run ec2-ip from you computer. Then check that pubic_ip.txt and private_ip.txt is populated with the ip addresses of you running instances. **If it is not working then none of the scripts will work**. Do this in both fusion-scripts and swift scripts directory.
 
 ##Swift Installation Scripts
-****Assumes that ec2-config file in swift-scripts is already filled.**
+\*\* *Assumes that ec2-config file in swift-scripts is already filled.*
+
 1. Start 2 (or more if you want to install on multiple worker nodes) ec2 instances one that will be the head the others fill be the workers
 2. On your computer `cd` into the swift-scripts directory
 3. Put the public ip of the instance you want to be the head node in head_node_public_ip.txt
@@ -18,14 +20,16 @@
 5. run `ec2-swift-install`
 
 ##FusionFS Installation Scripts
-****Assumes that ec2-config in fusion-scripts is already filled.**
-** It also uploads lookup.cpp on each node and compiles it.
+\*\* *Assumes that ec2-config in fusion-scripts is already filled.*
+\*\* *It also uploads lookup.cpp on each node and compiles it.*
+
 1. Start the ec2 instances that you want to install FusionFS on
 2. On your computer `cd` into the fusion-scripts directory
 3. Run `ec2-fusion-install`
 
 ##Test Scripts assume the following exists on each node:
-****I think these are taken care of for you if you install Swift and Fusion with the scripts provided and run test-mnt before running test**
+\*\* *I think these are taken care of for you if you install Swift and Fusion with the scripts provided and run test-mnt before running test*
+
 * a directory /mnt/swift-run
 * fusion mount directory path is /mnt/script/fusion_mount
 * read-test.sh is located in /mnt/swift-run
@@ -39,7 +43,8 @@
 ##Test Scripts
 
 ###Work Flow for Cluster of Size n
-****Assumes that ect-config files in swift-scripts and fusion-scripts are already filled**
+\*\* *Assumes that ect-config files in swift-scripts and fusion-scripts are already filled*
+
 1. Start nodes on ec2 one head node and n worker Nodes. Instances must have an ssd mounted at /mnt
 2. On your computer `cd` into the swift-scripts directory
 3. Put the public ip address of the head node on the first line of head_node_public_ip.txt
@@ -49,7 +54,7 @@
 
 
 ###Work Flow for Multiple Cluster Size Tests (32, 16, 8, 4)
-**I need to work on the `test-allSizes`  script before I fill this section
+\*\* *I need to work on the `test-allSizes`  script before I fill this section*
 
 ###Script Descriptions
 
