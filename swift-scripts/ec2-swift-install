@@ -1,0 +1,25 @@
+#!/bin/bash
+# installs Swift-t on all ec2 instances
+
+source ec2-config
+./ec2-ip
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+    ssh -q -i ${SWIFT_EC2_KEY}  $SWIFT_EC2_USER@${i} 'rm -rf ~/swift-t; git clone https://github.com/basheersubei/exm-debians.git; mv exm-debians swift-t; cd swift-t; sudo dpkg -i debs/exm-c-utils_0.4.0_amd64.deb; sudo apt-get -f install; sudo dpkg -i debs/exm-c-utils_0.4.0_amd64.deb; sudo dpkg -i debs/adlb-x_0.6.0_amd64.deb; sudo apt-get -f install; sudo dpkg -i debs/adlb-x_0.6.0_amd64.deb; sudo dpkg -i debs/stc_0.6.0_amd64.deb ; sudo apt-get -f install; sudo dpkg -i debs/stc_0.6.0_amd64.deb ;sudo dpkg -i debs/turbine_0.7.0_amd64.deb; sudo apt-get -f install; sudo dpkg -i debs/turbine_0.7.0_amd64.deb;   sudo dpkg -i debs/swift-t_0.8.0_amd64.deb; sudo apt-get -f install; sudo dpkg -i debs/swift-t_0.8.0_amd64.deb; source /etc/profile'
+done
+
+./ec2-push ${SWIFT_PUBLIC_KEY} /home/ubuntu/.ssh/id_rsa.pub
+./ec2-push-head ${SWIFT_PRIVATE_KEY} /home/ubuntu/.ssh/id_rsa
+
+for i in "${iparr[@]}"
+do
+ ssh -q -i ${SWIFT_EC2_KEY}  $SWIFT_EC2_USER@${i} 'cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys'
+done
+
+#disable strict host checking on head node
+ssh -i ${SWIFT_EC2_KEY}  $SWIFT_EC2_USER@$(sed -n "1,1p" head_node_public_ip.txt | cat) 'source ~/.profile; echo -e "Host *\n\tStrictHostKeyChecking no" > ~/.ssh/config'
+
+ec2-mkdir /home/ubuntu/swift-run

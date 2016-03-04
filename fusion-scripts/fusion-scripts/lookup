@@ -1,0 +1,5 @@
+var=$1
+output=$(/home/ubuntu/fusion/src/zht/lookup ${var#/mnt/script/fusion_mount})
+echo ip-$(echo "$output" | tr . - )
+#	host -i $output | awk '{ print $5 }' | awk -F. '{ print $1 }'
+# /home/ubuntu/fusion/src/zht/lookup ${var#/home/ubuntu/fusion/script/fusion_mount}

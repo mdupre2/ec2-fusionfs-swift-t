@@ -1,4 +1,6 @@
 #!/bin/bash
+# processes and combines results
+
 rm ${1}/${2}-mbs 2> /dev/null
 rm ${1}/${2}-mbs-normalized 2> /dev/null
 rm ${1}/${2}-records 2> /dev/null

@@ -1,0 +1,28 @@
+#!/bin/bash
+# Installs Fusionfs on ec2 
+
+source ec2-config
+
+./ec2-ip
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+	 ssh -i ${FUSIONFS_EC2_KEY}  $FUSIONFS_EC2_USER@${i} "source ~/.profile; rm -rf ~/fusion; sudo apt-get update; sudo apt-get install build-essential;  sudo apt-get install git; git clone https://bitbucket.org/dongfang/fusionfs-zht.git; mv fusionfs-zht fusion; mkdir software; mkdir ~/software/bin; mkdir ~/software/lib "
+
+     # upload fusion scripts directory
+     scp -i ${FUSIONFS_EC2_KEY} ./fusion-scripts/* $FUSIONFS_EC2_USER@${i}:/home/ubuntu/fusion/script
+
+     ssh -i ${FUSIONFS_EC2_KEY}  $FUSIONFS_EC2_USER@${i} 'source ~/.profile; cd /home/ubuntu/fusion/src/protobuf-2.4.1; ./configure; make; make check; sudo make install; cd ../protobuf-c-0.15; ./configure; make; make check; sudo make install; cd ../fuse-2.9.3; ./configure; make; sudo make install; modprobe fuse; ldconfig; echo export LD_LIBRARY_PATH=/usr/local/lib:/home/ubuntu/fusion/src/udt:/home/ubuntu/fusion/src/ffsnet:$LD_LIBRARY_PATH >> ~/.profile; echo export USER_INCLUDE=/usr/local/include >> ~/.profile; echo export USER_LIB=/usr/local/lib >> ~/.profle; echo export LD_LIBRARY_PATH=/usr/local/lib:/home/ubuntu/fusion/src/udt:/home/ubuntu/fusion/src/ffsnet:$LD_LIBRARY_PATH >> ~/.bashrc; echo export USER_INCLUDE=/usr/local/include >> ~/.bashrc; echo export USER_LIB=/usr/local/lib >> ~/.bashrc; source ~/.profile; cd ../../script;rm fusion_root/*; rm fusion_mount/*; ./cleanAll.sh; ./compileAll.sh;'
+
+      # Uncomment the following  2 lines if you would like to recompile lookup instead of using the precompiled one uploaded in the scripts directory above
+
+      #scp -i ${FUSIONFS_EC2_KEY} ../lookup-src/* $FUSIONFS_EC2_USER@${i}:/home/ubuntu/fusion/src/zht
+
+      #ssh -i ${FUSIONFS_EC2_KEY}  $FUSIONFS_EC2_USER@${i} 'source ~/.profile; cd /home/ubuntu/fusion/src/zht; make lookup; mv lookup /home/ubuntu/fusion/script/lookup;'
+
+done
+
+./ec2-chmod /home/ubuntu/fusion/script/lookup

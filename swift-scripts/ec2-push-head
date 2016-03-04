@@ -1,0 +1,16 @@
+#!/bin/bash
+# copies file to head instances
+
+source ec2-config
+
+# if not enough arguments print usage
+if [ "$#" -lt 2 ]; then
+    echo "Usage:  $(basename $0) file locationOnInstance "
+    echo "  example: $(basename $0) hello.txt /path/on/instance"
+    exit
+fi
+
+scp -i ${SWIFT_EC2_KEY} $1 $SWIFT_EC2_USER@$(sed -n "1,1p" head_node_public_ip.txt | cat):$2 # copy file
+
+
+

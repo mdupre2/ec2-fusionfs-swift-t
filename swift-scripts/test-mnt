@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+source ec2-config
+
+./ec2-ip
+
+# store public ips in an array
+iparr=($(cat public_ip.txt | awk '{ print $1 }'))
+
+for i in "${iparr[@]}"
+do
+	ssh  -q -i ${SWIFT_EC2_KEY}  $SWIFT_EC2_USER@${i} 'source ~/.profile; sudo chmod 0777 /mnt ; if [ ! -d "/mnt/script" ]; then cp -arv /home/ubuntu/fusion/script /mnt/script; fi; if [ ! -d "/mnt/swift-run" ]; then cp -arv /home/ubuntu/swift-run /mnt/swift-run; fi; if [ ! -d "/mnt/write" ]; then  mkdir /mnt/write; fi; if [ ! -d "/mnt/work" ]; then  mkdir /mnt/work; fi;' &
+done
+
+wait
+
+./ec2-push write-test.sh /mnt/swift-run/write-test.sh
+./ec2-push read-test.sh /mnt/swift-run/read-test.sh

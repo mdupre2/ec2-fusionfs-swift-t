@@ -26,3 +26,15 @@ export EC2_HOME=$(pwd)/ec2-api-tools-1.7.5-2.0
 export JAVA_HOME=$(/usr/libexec/java_home)
 
 
+
+
+##Config for ec2-swift-install##
+
+# path on your computer of the public key to be uploaded to
+# nodes during ec2-swift-install script
+export SWIFT_PRIVATE_KEY=
+
+
+# path on your computer of the private key to be uploaded to
+# nodes during ec2-swift-install script
+export SWIFT_PUBLIC_KEY=
