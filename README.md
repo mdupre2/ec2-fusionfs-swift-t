@@ -1,16 +1,16 @@
-#ec2-fusionfs-swift-t
+# ec2-fusionfs-swift-t
 
-##Setup
+## Setup
 
 1. Create ec2 instances. All insances must have FusionFS installed in the same location. Having all the instances look the same is helpful. Also its important to note **Swift-T does not work with t2.micro instances on ec2**  
 2. Fill in `ec2-config` file. Note that any environment variables exported in ~/.bashrc of the ec2 instance will not be exported. Export all environment variables in ~/.profile. 
 3. If you don't have a AWS user with **administative permissions**, [create a user](http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html). 
 4. Use the downloaded credentials to fill in `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` in `ec2-config` in both swift-scripts and fusion-scripts directory
 
-##Sanity Checks
+## Sanity Checks
 * Start ec2 instances and then run ec2-ip from you computer. Then check that pubic_ip.txt and private_ip.txt is populated with the ip addresses of your running instances. **If it is not working then none of the scripts will work**. Do this in both fusion-scripts and swift scripts directory.
 
-##Swift Installation Scripts
+## Swift Installation Scripts
 
 \*\* *Assumes that ec2-config file in swift-scripts is already filled.*
 
@@ -20,7 +20,7 @@
 4. create public and private key on local computer put the path to those files in `SWIFT_PRIVATE_KEY` and `SWIFT_PUBLIC_KEY` in ec2-config located in swift-scripts file
 5. run `ec2-swift-install`
 
-##FusionFS Installation Scripts
+## FusionFS Installation Scripts
 
 \*\* *Assumes that ec2-config in fusion-scripts is already filled.*
 \*\* *It also uploads lookup executable on each node.*
@@ -29,7 +29,7 @@
 2. On your computer `cd` into the fusion-scripts directory
 3. Run `ec2-fusion-install`
 
-##Test Scripts assume the following exists on each node:
+## Test Scripts assume the following exists on each node:
 
 \*\* *I think these are taken care of for you if you install Swift and Fusion with the scripts provided and run `test-mnt` before running tests*
 
@@ -43,9 +43,9 @@
 * It is recommended that you disable strict host checking on head node :`echo -e "Host *\n\tStrictHostKeyChecking no" > ~/.ssh/config`
 
 
-##Test Scripts
+## Test Scripts
 
-###Work Flow for Cluster of Size n
+### Work Flow for Cluster of Size n
 
 \*\* *Assumes that ec2-config files in swift-scripts and fusion-scripts are already filled*
 
@@ -57,13 +57,13 @@
 
 
 
-###Work Flow for Multiple Cluster Size Tests (32, 16, 8, 4)
+### Work Flow for Multiple Cluster Size Tests (32, 16, 8, 4)
 
 \*\* *I need to work on the `test-allSizes`  script before I fill this section*
 
-###Script Descriptions
+### Script Descriptions
 
-####test-allSizes
+#### test-allSizes
 
 Usage : `test-allSizes`
 Runs test-all with each cluster size: 33, 17, 9, 5 . (these numbers include the head node)
@@ -71,14 +71,14 @@ Make sure head node ip must be at the first ip in private_ip.txt, public_ip.txt 
 **This script may have a bug in it:** may be better to do test with various cluster sizes using test-all.
 
  
-####test-all
+#### test-all
 
 Usage : `test-start <n-proc>`
 runs test-start 3 times with each opt number:  0,1,2
 adds row to csv files in data directory with results.
 
 
-####test-start
+#### test-start
 
 Usage : `test-start <n-proc> <opt-num>`
 Performs read/write test with 64 files of 1024 bytes using n-proc processes
